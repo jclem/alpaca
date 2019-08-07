@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -14,7 +13,7 @@ var rootCmd = &cobra.Command{
 
 Documentation at https://github.com/jclem/alpaca`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hello!")
+		cmd.Help()
 	},
 }
 
