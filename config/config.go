@@ -40,6 +40,19 @@ type Object struct {
 // ObjectMap is a mapping of object names to objects
 type ObjectMap map[string]Object
 
+// Script is a runnable script in a workflow.
+type Script struct {
+	Content string `yaml:"content"`
+	Inline  bool   `yaml:"inline"`
+	Path    string `yaml:"path"`
+	Type    string `yaml:"type"`
+}
+
+// Then is an object following another object.
+type Then struct {
+	Object string `yaml:"object"`
+}
+
 // UnmarshalYAML unmarshals an object.
 func (o *ObjectMap) UnmarshalYAML(node *yaml.Node) error {
 	var m map[string]Object
@@ -61,19 +74,6 @@ func (o *ObjectMap) UnmarshalYAML(node *yaml.Node) error {
 	}
 
 	return nil
-}
-
-// Script is a runnable script in a workflow.
-type Script struct {
-	Content string `yaml:"content"`
-	Inline  bool   `yaml:"inline"`
-	Path    string `yaml:"path"`
-	Type    string `yaml:"type"`
-}
-
-// Then is an object following another object.
-type Then struct {
-	Object string `yaml:"object"`
 }
 
 // Read parses an alpaca.json file.

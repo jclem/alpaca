@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/jclem/alpaca/app/config"
+	"github.com/jclem/alpaca/config"
 )
 
 var argumentType = map[string]int64{

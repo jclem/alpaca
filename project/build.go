@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/groob/plist"
-	"github.com/jclem/alpaca/app/config"
-	"github.com/jclem/alpaca/app/workflow"
+	"github.com/jclem/alpaca/config"
+	"github.com/jclem/alpaca/workflow"
 	"github.com/pkg/errors"
 )
 
