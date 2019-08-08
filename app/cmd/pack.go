@@ -9,17 +9,19 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/groob/plist"
 	"github.com/jclem/alpaca/app/config"
+	"github.com/jclem/alpaca/app/workflow"
 	"github.com/spf13/cobra"
 )
 
 func init() {
-	rootCmd.AddCommand(buildCmd)
+	rootCmd.AddCommand(&packCmd)
 }
 
-var buildCmd = &cobra.Command{
-	Use:   "build <dir>",
-	Short: "Build the given directory",
+var packCmd = cobra.Command{
+	Use:   "pack <dir>",
+	Short: "Package the given Alpaca project into an Alfred workflow",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		dir := args[0]
@@ -53,15 +55,54 @@ var buildCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		xml, err := cfg.ToXML()
+		info, err := workflow.NewFromConfig(path, *cfg)
+		if err != nil {
+			log.Fatal(err)
+		}
+		plistBytes, err := plist.MarshalIndent(info, "\t")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		writer.Write(xml)
+		writer.Write(plistBytes)
 
-		if err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-			if strings.HasSuffix(path, "info.plist") {
+		if cfg.Icon != "" {
+			src := filepath.Join(path, cfg.Icon)
+			ext := filepath.Ext(src)
+
+			if ext != ".png" {
+				log.Fatalf("Workflow icon must be a .png, got %q", ext)
+			}
+
+			dst := fmt.Sprintf("%s%s", "icon", ext)
+			if err := copyFile(src, dst, archive); err != nil {
+				log.Fatal(err)
+			}
+		}
+
+		for _, obj := range cfg.Objects {
+			if obj.Icon == "" {
+				continue
+			}
+
+			src := filepath.Join(path, obj.Icon)
+			ext := filepath.Ext(src)
+			if ext != ".png" {
+				log.Fatalf("Object icon must be a .png, got %q", ext)
+			}
+
+			dst := fmt.Sprintf("%s%s", obj.UID, ext)
+			if err := copyFile(src, dst, archive); err != nil {
+				log.Fatal(err)
+			}
+		}
+
+		if err := filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
+			if info.IsDir() {
+				return nil
+			}
+
+			if strings.HasSuffix(filePath, "info.plist") {
 				return nil
 			}
 
@@ -73,17 +114,15 @@ var buildCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
+			name := strings.TrimPrefix(filePath, path+"/")
+			header.Name = name
 
 			writer, err := archive.CreateHeader(header)
 			if err != nil {
 				return err
 			}
 
-			if info.IsDir() {
-				return nil
-			}
-
-			file, err := os.Open(path)
+			file, err := os.Open(filePath)
 			if err != nil {
 				return err
 			}
@@ -97,6 +136,33 @@ var buildCmd = &cobra.Command{
 			log.Fatalf("Unable to create archive")
 		}
 	},
+}
+
+func copyFile(from string, to string, archive *zip.Writer) error {
+	info, err := os.Stat(from)
+	if err != nil {
+		return err
+	}
+
+	header, err := zip.FileInfoHeader(info)
+	header.Name = to
+
+	writer, err := archive.CreateHeader(header)
+	if err != nil {
+		return err
+	}
+
+	file, err := os.Open(from)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	if _, err := io.Copy(writer, file); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func readConfig(dir string) (*config.Config, error) {

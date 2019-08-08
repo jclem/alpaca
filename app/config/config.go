@@ -3,48 +3,68 @@ package config
 import (
 	"io/ioutil"
 	"os"
+	"strings"
 
-	"github.com/groob/plist"
-	"gopkg.in/yaml.v2"
+	"github.com/google/uuid"
+	"gopkg.in/yaml.v3"
 )
 
 // Config is a parsed alpaca.json file.
 type Config struct {
-	Author              string                  `yaml:"author" plist:"createdby"`
-	BundleID            string                  `yaml:"bundle-id" plist:"bundleid"`
-	Connections         map[string][]Connection `yaml:"connections" plist:"connections"`
-	Description         string                  `yaml:"description" plist:"description"`
-	Name                string                  `yaml:"name" plist:"name"`
-	Objects             map[string]Object       `yaml:"objects" plist:"-"`
-	ObjectList          []Object                `yaml:"-" plist:"objects"`
-	Readme              string                  `yaml:"readme" plist:"readme"`
-	UIData              map[string]UIData       `yaml:"uidata" plist:"uidata"`
-	URL                 string                  `yaml:"url" plist:"webaddress"`
-	Variables           map[string]string       `yaml:"variables" plist:"variables"`
-	VariablesDontExport []string                `yaml:"variablesdontexport" plist:"variablesdontexport"`
-	Version             string                  `yaml:"version" plist:"version"`
-}
-
-// Connection is a line between two objects.
-type Connection struct {
-	To              string `yaml:"to" plist:"destinationuid"`
-	Modifiers       int64  `yaml:"modifiers" plist:"modifiers"`
-	ModifierSubtext string `yaml:"subtext" plist:"modifiersubtext"`
-	VetoClose       bool   `yaml:"vito-close" plist:"vitoclose"` // NOTE: Yes, "vitoclose"
+	Author      string            `yaml:"author"`
+	BundleID    string            `yaml:"bundle-id"`
+	Description string            `yaml:"description"`
+	Icon        string            `yaml:"icon"`
+	Name        string            `yaml:"name"`
+	Objects     ObjectMap         `yaml:"objects"`
+	Readme      string            `yaml:"readme"`
+	URL         string            `yaml:"url"`
+	Variables   map[string]string `yaml:"variables"`
+	Version     string            `yaml:"version"`
 }
 
 // Object is an object in an Alfred workflow.
 type Object struct {
-	Config  map[string]interface{} `yaml:"config" plist:"config"`
-	Type    string                 `yaml:"type" plist:"type"`
-	UID     string                 `yaml:"uid" plist:"uid"`
-	Version int64                  `yaml:"version" plist:"version"`
+	Icon    string  `yaml:"icon"`
+	Name    string  `yaml:"-"`
+	Script  *Script `yaml:"script"`
+	Type    string  `yaml:"type"`
+	UID     string  `yaml:"uid"`
+	Version int64   `yaml:"version"`
 }
 
-// UIData represents the position of an object.
-type UIData struct {
-	X int64 `yaml:"x" plist:"xpos"`
-	Y int64 `yaml:"y" plist:"ypos"`
+// ObjectMap is a mapping of object names to objects
+type ObjectMap map[string]Object
+
+// UnmarshalYAML unmarshals an object.
+func (o *ObjectMap) UnmarshalYAML(node *yaml.Node) error {
+	var m map[string]Object
+	if err := node.Decode(&m); err != nil {
+		return err
+	}
+
+	*o = make(ObjectMap)
+
+	for name, obj := range m {
+		uid, err := uuid.NewRandom()
+		if err != nil {
+			return err
+		}
+
+		obj.UID = strings.ToUpper(uid.String())
+		obj.Name = name
+		(*o)[obj.Name] = obj
+	}
+
+	return nil
+}
+
+// Script is a runnable script in a workflow.
+type Script struct {
+	Content string `yaml:"content"`
+	Inline  bool   `yaml:"inline"`
+	Path    string `yaml:"path"`
+	Type    string `yaml:"type"`
 }
 
 // Read parses an alpaca.json file.
@@ -66,15 +86,4 @@ func Read(path string) (*Config, error) {
 	}
 
 	return &config, nil
-}
-
-// ToXML writes a config to XML.
-func (c Config) ToXML() ([]byte, error) {
-	// Construct ObjectList before we marshal to a plist.
-	c.ObjectList = []Object{}
-	for _, obj := range c.Objects {
-		c.ObjectList = append(c.ObjectList, obj)
-	}
-
-	return plist.MarshalIndent(c, "\t")
 }

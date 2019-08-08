@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
+var rootCmd = cobra.Command{
 	Use:   "alpaca",
 	Short: "Alpaca is a packaging utility for Alfred workflows",
 	Long: `A package utility for Alfred workflows built by @jclem in Go
