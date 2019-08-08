@@ -4,6 +4,8 @@ Alpaca is a command line utility for building Alfred workflow bundles.
 
 An alpaca project is an `alpaca.yml` file that defines the workflow, alongside any supporting files, such as scripts or images.
 
+**Note:** Alpaca is still in the proof-of-concept phase. Huge portions of Alfred functionality are unimplemented.
+
 ## Installation
 
 ```shell
