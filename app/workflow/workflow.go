@@ -1,13 +1,21 @@
 package workflow
 
 import (
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 
 	"github.com/jclem/alpaca/app/config"
 )
 
+var argumentType = map[string]int64{
+	"required": 0,
+	"optional": 1,
+	"none":     2,
+}
+
 var objectType = map[string]string{
+	"keyword":       "alfred.workflow.input.keyword",
 	"script":        "alfred.workflow.action.script",
 	"script-filter": "alfred.workflow.input.scriptfilter",
 }
@@ -46,6 +54,7 @@ type Info struct {
 func NewFromConfig(path string, c config.Config) (*Info, error) {
 	i := Info{
 		BundleID:    c.BundleID,
+		Connections: map[string][]Connection{},
 		CreatedBy:   c.Author,
 		Description: c.Description,
 		Name:        c.Name,
@@ -54,6 +63,33 @@ func NewFromConfig(path string, c config.Config) (*Info, error) {
 		Version:     c.Version,
 	}
 
+	// Build workflow connections.
+	for _, cfgObj := range c.Objects {
+		for _, then := range cfgObj.Then {
+			conns, ok := i.Connections[cfgObj.UID]
+			if !ok {
+				i.Connections[cfgObj.UID] = []Connection{}
+			}
+
+			// Find the UID for the object we're connecting to.
+			var uid string
+			for _, cfgObj := range c.Objects {
+				if cfgObj.Name == then.Object {
+					uid = cfgObj.UID
+					break
+				}
+			}
+			if uid == "" {
+				return nil, fmt.Errorf("Could not find object %q", then.Object)
+			}
+
+			i.Connections[cfgObj.UID] = append(conns, Connection{
+				To: uid,
+			})
+		}
+	}
+
+	// Build workflow objects.
 	for _, cfgObj := range c.Objects {
 		obj := Object{
 			Type:    objectType[cfgObj.Type],
@@ -66,6 +102,12 @@ func NewFromConfig(path string, c config.Config) (*Info, error) {
 			if err := obj.Config.addScriptConfig(path, cfgObj.Script); err != nil {
 				return nil, err
 			}
+		}
+
+		if cfgObj.Type == "keyword" {
+			obj.Config["keyword"] = cfgObj.Keyword
+			obj.Config["withspace"] = cfgObj.WithSpace
+			obj.Config["argumenttype"] = argumentType[cfgObj.Argument]
 		}
 
 		i.Objects = append(i.Objects, obj)

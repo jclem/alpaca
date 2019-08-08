@@ -1,0 +1,21 @@
+name: Say
+version: 0.1.0
+author: Jonathan Clem <jonathan@jclem.net>
+bundle-id: com.jclem.alfred.alpaca-test.say-hello
+description: Says words
+url: https://github.com/jclem/alpaca/blob/master/app/tests/fixtures/say
+icon: img/alpaca.png
+
+objects:
+  trigger:
+    type: keyword
+    keyword: say
+    with-space: true
+    argument: required
+    then:
+      - object: say
+  say:
+    type: script
+    script:
+      content: say {query}
+      type: bash

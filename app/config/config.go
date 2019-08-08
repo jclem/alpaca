@@ -25,12 +25,16 @@ type Config struct {
 
 // Object is an object in an Alfred workflow.
 type Object struct {
-	Icon    string  `yaml:"icon"`
-	Name    string  `yaml:"-"`
-	Script  *Script `yaml:"script"`
-	Type    string  `yaml:"type"`
-	UID     string  `yaml:"uid"`
-	Version int64   `yaml:"version"`
+	Argument  string  `yaml:"argument"`
+	Icon      string  `yaml:"icon"`
+	Keyword   string  `yaml:"keyword"`
+	Name      string  `yaml:"-"`
+	Script    *Script `yaml:"script"`
+	Then      []Then  `yaml:"then"`
+	Type      string  `yaml:"type"`
+	UID       string  `yaml:"uid"`
+	Version   int64   `yaml:"version"`
+	WithSpace bool    `yaml:"with-space"`
 }
 
 // ObjectMap is a mapping of object names to objects
@@ -65,6 +69,11 @@ type Script struct {
 	Inline  bool   `yaml:"inline"`
 	Path    string `yaml:"path"`
 	Type    string `yaml:"type"`
+}
+
+// Then is an object following another object.
+type Then struct {
+	Object string `yaml:"object"`
 }
 
 // Read parses an alpaca.json file.
