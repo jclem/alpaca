@@ -17,6 +17,7 @@ var argumentType = map[string]int64{
 var objectType = map[string]string{
 	"clipboard":     "alfred.workflow.output.clipboard",
 	"keyword":       "alfred.workflow.input.keyword",
+	"open-url":      "alfred.workflow.action.openurl",
 	"script":        "alfred.workflow.action.script",
 	"script-filter": "alfred.workflow.input.scriptfilter",
 }
@@ -62,6 +63,11 @@ func NewFromConfig(path string, c config.Config) (*Info, error) {
 		Readme:      c.Readme,
 		WebAddress:  c.URL,
 		Version:     c.Version,
+		Variables:   c.Variables,
+	}
+
+	for varName := range i.Variables {
+		i.VariablesDontExport = append(i.VariablesDontExport, varName)
 	}
 
 	// Build workflow connections.

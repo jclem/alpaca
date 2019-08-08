@@ -38,6 +38,8 @@ var packCmd = cobra.Command{
 			}
 		}
 
-		project.Build(projectPath, outDir)
+		if err := project.Build(projectPath, outDir); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
