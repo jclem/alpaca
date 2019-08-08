@@ -12,7 +12,7 @@ $ go get github.com/jclem/alpaca
 
 ## Usage
 
-### `alpacka pack <dir>`
+### `alpaca pack <dir>`
 
 Pack an Alpaca project into an Alfred workflow. The workflow will be output into the current directory.
 
