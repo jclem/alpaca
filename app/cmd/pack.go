@@ -109,6 +109,10 @@ var packCmd = cobra.Command{
 				return nil
 			}
 
+			if filePath == targetPath {
+				return nil
+			}
+
 			if strings.HasSuffix(filePath, "info.plist") {
 				return nil
 			}
