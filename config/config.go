@@ -25,16 +25,19 @@ type Config struct {
 
 // Object is an object in an Alfred workflow.
 type Object struct {
-	Argument  string  `yaml:"argument"`
-	Icon      string  `yaml:"icon"`
-	Keyword   string  `yaml:"keyword"`
-	Name      string  `yaml:"-"`
-	Script    *Script `yaml:"script"`
-	Then      []Then  `yaml:"then"`
-	Type      string  `yaml:"type"`
-	UID       string  `yaml:"uid"`
-	Version   int64   `yaml:"version"`
-	WithSpace bool    `yaml:"with-space"`
+	Argument       string  `yaml:"argument"`
+	Icon           string  `yaml:"icon"`
+	Keyword        string  `yaml:"keyword"`
+	Name           string  `yaml:"-"`
+	RunningSubtext string  `yaml:"running-subtext"`
+	Script         *Script `yaml:"script"`
+	Text           string  `yaml:"text"`
+	Then           []Then  `yaml:"then"`
+	Title          string  `yaml:"title"`
+	Type           string  `yaml:"type"`
+	UID            string  `yaml:"uid"`
+	Version        int64   `yaml:"version"`
+	WithSpace      bool    `yaml:"with-space"`
 }
 
 // ObjectMap is a mapping of object names to objects

@@ -15,6 +15,7 @@ var argumentType = map[string]int64{
 }
 
 var objectType = map[string]string{
+	"clipboard":     "alfred.workflow.output.clipboard",
 	"keyword":       "alfred.workflow.input.keyword",
 	"script":        "alfred.workflow.action.script",
 	"script-filter": "alfred.workflow.input.scriptfilter",
@@ -98,10 +99,20 @@ func NewFromConfig(path string, c config.Config) (*Info, error) {
 			Config:  map[string]interface{}{},
 		}
 
+		obj.Config["title"] = cfgObj.Title
+
 		if cfgObj.Script != nil {
 			if err := obj.Config.addScriptConfig(path, cfgObj.Script); err != nil {
 				return nil, err
 			}
+
+			obj.Config["keyword"] = cfgObj.Keyword
+			obj.Config["runningsubtext"] = cfgObj.RunningSubtext
+			obj.Config["withspace"] = cfgObj.WithSpace
+		}
+
+		if cfgObj.Type == "clipboard" {
+			obj.Config["clipboardtext"] = cfgObj.Text
 		}
 
 		if cfgObj.Type == "keyword" {
