@@ -15,7 +15,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var out string
+
 func init() {
+	packCmd.Flags().StringVarP(&out, "out", "o", "", "Directory to output the packaged workflow to")
 	rootCmd.AddCommand(&packCmd)
 }
 
@@ -35,12 +38,16 @@ var packCmd = cobra.Command{
 			log.Fatal(err)
 		}
 
-		wd, err := os.Getwd()
-		if err != nil {
-			log.Fatalf("Could not get working directory")
+		outDir := out
+
+		if out == "" {
+			outDir, err = os.Getwd()
+			if err != nil {
+				log.Fatalf("Could not get working directory")
+			}
 		}
 
-		targetPath := filepath.Join(wd, fmt.Sprintf("%s.alfredworkflow", cfg.Name))
+		targetPath := filepath.Join(outDir, fmt.Sprintf("%s.alfredworkflow", cfg.Name))
 		workflowFile, err := os.Create(targetPath)
 		if err != nil {
 			log.Fatal("Could not create workflow file")
