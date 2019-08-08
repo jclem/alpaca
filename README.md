@@ -11,5 +11,5 @@ $ go get github.com/jclem/alpaca
 ## Usage
 
 ```shell
-$ alpaca build
+$ alpaca pack .
 ```
