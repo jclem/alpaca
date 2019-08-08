@@ -9,6 +9,7 @@ icon: img/alpaca.png
 objects:
   trigger:
     type: keyword
+    icon: img/speak.png
     keyword: say
     with-space: true
     argument: required
