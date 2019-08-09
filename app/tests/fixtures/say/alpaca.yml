@@ -10,11 +10,12 @@ objects:
   trigger:
     type: keyword
     icon: img/speak.png
-    keyword: say
-    with-space: true
-    argument: required
-    then:
-      - object: say
+    config:
+      keyword: say
+      with-space: true
+      argument: required
+  then: [object: say]
+
   say:
     type: script
     script:

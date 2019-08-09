@@ -2,53 +2,24 @@ package workflow
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
 
 	"github.com/jclem/alpaca/config"
 )
 
-var argumentType = map[string]int64{
-	"required": 0,
-	"optional": 1,
-	"none":     2,
-}
-
-var objectType = map[string]string{
-	"clipboard":     "alfred.workflow.output.clipboard",
-	"keyword":       "alfred.workflow.input.keyword",
-	"open-url":      "alfred.workflow.action.openurl",
-	"script":        "alfred.workflow.action.script",
-	"script-filter": "alfred.workflow.input.scriptfilter",
-}
-
-var scriptType = map[string]int64{
-	"bash":         0,
-	"php":          1,
-	"ruby":         2,
-	"python":       3,
-	"perl":         4,
-	"zsh":          5,
-	"osascript-as": 6,
-	"osascript-js": 7,
-}
-
-var inlineScript = 8
-
 // Info represents an info.plist in a workflow.
 type Info struct {
-	BundleID            string                  `plist:"bundleid,omitempty"`
-	Connections         map[string][]Connection `plist:"connections,omitempty"`
-	CreatedBy           string                  `plist:"createdby,omitempty"`
-	Description         string                  `plist:"description,omitempty"`
-	Name                string                  `plist:"name,omitempty"`
-	Objects             []Object                `plist:"objects,omitempty"`
-	Readme              string                  `plist:"readme,omitempty"`
-	UIData              map[string]UIData       `plist:"uidata,omitempty"`
-	WebAddress          string                  `plist:"webaddress,omitempty"`
-	Variables           map[string]string       `plist:"variables,omitempty"`
-	VariablesDontExport []string                `plist:"variablesdontexport,omitempty"`
-	Version             string                  `plist:"version,omitempty"`
+	BundleID            string                   `plist:"bundleid,omitempty"`
+	Connections         map[string][]Connection  `plist:"connections,omitempty"`
+	CreatedBy           string                   `plist:"createdby,omitempty"`
+	Description         string                   `plist:"description,omitempty"`
+	Name                string                   `plist:"name,omitempty"`
+	Objects             []map[string]interface{} `plist:"objects,omitempty"`
+	Readme              string                   `plist:"readme,omitempty"`
+	UIData              map[string]UIData        `plist:"uidata,omitempty"`
+	WebAddress          string                   `plist:"webaddress,omitempty"`
+	Variables           map[string]string        `plist:"variables,omitempty"`
+	VariablesDontExport []string                 `plist:"variablesdontexport,omitempty"`
+	Version             string                   `plist:"version,omitempty"`
 	path                string
 }
 
@@ -98,35 +69,7 @@ func NewFromConfig(path string, c config.Config) (*Info, error) {
 
 	// Build workflow objects.
 	for _, cfgObj := range c.Objects {
-		obj := Object{
-			Type:    objectType[cfgObj.Type],
-			UID:     cfgObj.UID,
-			Version: cfgObj.Version,
-			Config:  map[string]interface{}{},
-		}
-
-		obj.Config["title"] = cfgObj.Title
-
-		if cfgObj.Script != nil {
-			if err := obj.Config.addScriptConfig(path, cfgObj.Script); err != nil {
-				return nil, err
-			}
-
-			obj.Config["keyword"] = cfgObj.Keyword
-			obj.Config["runningsubtext"] = cfgObj.RunningSubtext
-			obj.Config["withspace"] = cfgObj.WithSpace
-		}
-
-		if cfgObj.Type == "clipboard" {
-			obj.Config["clipboardtext"] = cfgObj.Text
-		}
-
-		if cfgObj.Type == "keyword" {
-			obj.Config["keyword"] = cfgObj.Keyword
-			obj.Config["withspace"] = cfgObj.WithSpace
-			obj.Config["argumenttype"] = argumentType[cfgObj.Argument]
-		}
-
+		obj := cfgObj.ToWorkflowConfig()
 		i.Objects = append(i.Objects, obj)
 	}
 
@@ -151,39 +94,6 @@ type Object struct {
 
 // Config is a generic object configuration object.
 type Config map[string]interface{}
-
-func (c *Config) addScriptConfig(path string, script *config.Script) error {
-	cfg := *c
-
-	// An inlined path script
-	if script.Inline {
-		cfg["type"] = scriptType[script.Type]
-		scriptPath := filepath.Join(path, script.Path)
-		bytes, err := ioutil.ReadFile(scriptPath)
-		if err != nil {
-			return err
-		}
-		cfg["script"] = string(bytes)
-
-		return nil
-	}
-
-	// An inline script
-	if script.Type != "" {
-		cfg["type"] = scriptType[script.Type]
-		cfg["script"] = script.Content
-		return nil
-	}
-
-	// A path to a script
-	if script.Path != "" {
-		cfg["type"] = inlineScript
-		cfg["scriptfile"] = script.Path
-		return nil
-	}
-
-	return nil
-}
 
 // UIData represents the position of an object.
 type UIData struct {

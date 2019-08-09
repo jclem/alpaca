@@ -13,13 +13,6 @@ objects:
     type: script
     script:
       path: scripts/hi.js
-  script-inline-path:
-    icon: img/alpaca.png
-    type: script
-    script:
-      path: scripts/hi.rb
-      inline: true
-      type: ruby
   script-inline:
     icon: img/alpaca.png
     type: script

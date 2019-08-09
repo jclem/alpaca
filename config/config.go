@@ -11,7 +11,7 @@ import (
 
 // Config is a parsed alpaca.json file.
 type Config struct {
-	Author      string            `yaml:"author"`
+	Author      string
 	BundleID    string            `yaml:"bundle-id"`
 	Description string            `yaml:"description"`
 	Icon        string            `yaml:"icon"`
@@ -23,33 +23,8 @@ type Config struct {
 	Version     string            `yaml:"version"`
 }
 
-// Object is an object in an Alfred workflow.
-type Object struct {
-	Argument       string  `yaml:"argument"`
-	Icon           string  `yaml:"icon"`
-	Keyword        string  `yaml:"keyword"`
-	Name           string  `yaml:"-"`
-	RunningSubtext string  `yaml:"running-subtext"`
-	Script         *Script `yaml:"script"`
-	Text           string  `yaml:"text"`
-	Then           []Then  `yaml:"then"`
-	Title          string  `yaml:"title"`
-	Type           string  `yaml:"type"`
-	UID            string  `yaml:"uid"`
-	Version        int64   `yaml:"version"`
-	WithSpace      bool    `yaml:"with-space"`
-}
-
 // ObjectMap is a mapping of object names to objects
 type ObjectMap map[string]Object
-
-// Script is a runnable script in a workflow.
-type Script struct {
-	Content string `yaml:"content"`
-	Inline  bool   `yaml:"inline"`
-	Path    string `yaml:"path"`
-	Type    string `yaml:"type"`
-}
 
 // Then is an object following another object.
 type Then struct {
