@@ -128,7 +128,7 @@ var scriptType = map[string]int64{
 	"zsh":          5,
 	"osascript-as": 6,
 	"osascript-js": 7,
-	"inline":       8,
+	"external":     8,
 }
 
 // ScriptConfig is a runnable script in a workflow.
@@ -140,6 +140,12 @@ type ScriptConfig struct {
 
 func (s ScriptConfig) ToWorkflowConfig() map[string]interface{} {
 	m := structs.Map(s)
-	m["type"] = scriptType[s.Type]
+
+	if s.Type == "" {
+		m["type"] = scriptType["external"]
+	} else {
+		m["type"] = scriptType[s.Type]
+	}
+
 	return m
 }
