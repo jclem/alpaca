@@ -6,8 +6,8 @@ type keywordArgumentType string
 
 var (
 	keywordArgumentRequired keywordArgumentType = "required"
-	keywordArgumentOptional                     = "optional"
-	keywordArgumentNone                         = "none"
+	keywordArgumentOptional keywordArgumentType = "optional"
+	keywordArgumentNone     keywordArgumentType = "none"
 )
 
 // Keyword is an object triggered by a keyword
