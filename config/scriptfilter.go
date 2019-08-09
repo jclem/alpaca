@@ -37,8 +37,8 @@ type ScriptFilter struct {
 	Escaping            []string            `yaml:"escaping" structs:"-"`
 	IgnoreEmptyArgument bool                `yaml:"ignore-empty-argument" structs:"-"`
 	Keyword             string              `yaml:"keyword" structs:"keyword"`
-	RunningSubtext      string              `yaml:"running-subtext" structs:"runningsubtext"`
-	Subtext             string              `yaml:"subtext" structs:"subtext"`
+	RunningSubtitle     string              `yaml:"running-subtitle" structs:"runningsubtext"`
+	Subtitle            string              `yaml:"subtitle" structs:"subtext"`
 	Title               string              `yaml:"title" structs:"title"`
 	WithSpace           bool                `yaml:"with-space" structs:"withspace"`
 	Script              ScriptConfig        `yaml:"script" structs:"-"`

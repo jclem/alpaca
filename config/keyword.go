@@ -14,6 +14,8 @@ var (
 type Keyword struct {
 	Keyword   string              `yaml:"keyword" structs:"keyword"`
 	WithSpace bool                `yaml:"with-space" structs:"withspace"`
+	Title     string              `yaml:"title" structs:"text"`
+	Subtitle  string              `yaml:"subtitle" structs:"subtext"`
 	Argument  keywordArgumentType `yaml:"argument" structs:"argumenttype"`
 }
 
