@@ -3,9 +3,7 @@ package config
 import (
 	"io/ioutil"
 	"os"
-	"strings"
 
-	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
 )
 
@@ -41,12 +39,6 @@ func (o *ObjectMap) UnmarshalYAML(node *yaml.Node) error {
 	*o = make(ObjectMap)
 
 	for name, obj := range m {
-		uid, err := uuid.NewRandom()
-		if err != nil {
-			return err
-		}
-
-		obj.UID = strings.ToUpper(uid.String())
 		obj.Name = name
 		(*o)[obj.Name] = obj
 	}

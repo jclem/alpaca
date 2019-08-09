@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/fatih/structs"
 	"github.com/google/uuid"
@@ -22,7 +23,7 @@ var (
 
 // Object is an object in an Alfred workflow
 type Object struct {
-	Name    string       `yaml:"name" structs:"-"`
+	Name    string       `yaml:"-" structs:"-"`
 	Icon    string       `yaml:"icon" structs:"-"`
 	Type    ObjectType   `yaml:"type" structs:"-"`
 	UID     string       `yaml:"-" structs:"uid"`
@@ -36,10 +37,9 @@ func (o *Object) UnmarshalYAML(node *yaml.Node) error {
 	if err != nil {
 		return err
 	}
-	o.UID = uuid.String()
+	o.UID = strings.ToUpper(uuid.String())
 
 	var proxy struct {
-		Name    string
 		Icon    string
 		Type    ObjectType
 		Then    []Then
@@ -51,7 +51,6 @@ func (o *Object) UnmarshalYAML(node *yaml.Node) error {
 		return err
 	}
 
-	o.Name = proxy.Name
 	o.Icon = proxy.Icon
 	o.Type = proxy.Type
 	o.Then = proxy.Then
