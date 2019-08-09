@@ -119,85 +119,6 @@ type ObjectConfig interface {
 	ToWorkflowConfig() map[string]interface{}
 }
 
-type keywordArgumentType string
-
-var (
-	keywordArgumentRequired keywordArgumentType = "required"
-	keywordArgumentOptional                     = "optional"
-	keywordArgumentNone                         = "none"
-)
-
-// Keyword is an object triggered by a keyword
-type Keyword struct {
-	Keyword   string              `yaml:"keyword" structs:"keyword"`
-	WithSpace bool                `yaml:"with-space" structs:"withspace"`
-	Argument  keywordArgumentType `yaml:"argument" structs:"argumenttype"`
-}
-
-var argumentType = map[keywordArgumentType]int64{
-	"required": 0,
-	"optional": 1,
-	"none":     2,
-}
-
-func (k Keyword) ToWorkflowConfig() map[string]interface{} {
-	m := structs.Map(k)
-	m["argumenttype"] = argumentType[k.Argument]
-	return m
-}
-
-// Script is an Alfred action that runs a script
-type Script struct {
-	Script ScriptConfig
-}
-
-func (s Script) ToWorkflowConfig() map[string]interface{} {
-	return s.Script.ToWorkflowConfig()
-}
-
-// ScriptFilter is an Alfred filter that runs a script
-type ScriptFilter struct {
-	Keyword        string       `yaml:"keyword" structs:"keyword"`
-	RunningSubtext string       `yaml:"running-subtext" structs:"runningsubtext"`
-	Title          string       `yaml:"title" structs:"title"`
-	WithSpace      bool         `yaml:"with-space" structs:"withspace"`
-	Script         ScriptConfig `yaml:"script" structs:"-"`
-}
-
-func (s ScriptFilter) ToWorkflowConfig() map[string]interface{} {
-	m := structs.Map(s)
-	sMap := structs.Map(s.Script)
-
-	for k, v := range sMap {
-		m[k] = v
-	}
-
-	return m
-}
-
-// Clipboard is an object that copies to the clipboard
-type Clipboard struct {
-	Text string `yaml:"text" structs:"text"`
-}
-
-func (c Clipboard) ToWorkflowConfig() map[string]interface{} {
-	return structs.Map(c)
-}
-
-// OpenURL is an object that opens a URL in a browser
-type OpenURL struct{}
-
-func (o OpenURL) ToWorkflowConfig() map[string]interface{} {
-	return structs.Map(o)
-}
-
-// ScriptConfig is a runnable script in a workflow.
-type ScriptConfig struct {
-	Content string `yaml:"content" structs:"script"`
-	Path    string `yaml:"path" structs:"scriptfile"`
-	Type    string `yaml:"type" structs:"-"`
-}
-
 var scriptType = map[string]int64{
 	"bash":         0,
 	"php":          1,
@@ -208,6 +129,13 @@ var scriptType = map[string]int64{
 	"osascript-as": 6,
 	"osascript-js": 7,
 	"inline":       8,
+}
+
+// ScriptConfig is a runnable script in a workflow.
+type ScriptConfig struct {
+	Content string `yaml:"content" structs:"script"`
+	Path    string `yaml:"path" structs:"scriptfile"`
+	Type    string `yaml:"type" structs:"-"`
 }
 
 func (s ScriptConfig) ToWorkflowConfig() map[string]interface{} {
