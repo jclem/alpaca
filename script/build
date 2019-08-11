@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# Recreate build directory
+if test -d build; then rm -r build/; fi
+
+mkdir build
+
+GOOS=linux GOARCH=amd64 go build
+tar czvf build/alpaca-$1-for-Linux-64-bit.tar.gz alpaca
+rm alpaca
+
+go build
+tar czvf build/alpaca-$1-for-macOS.tar.gz alpaca
+rm alpaca
