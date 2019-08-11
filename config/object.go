@@ -13,6 +13,7 @@ import (
 type ObjectType string
 
 var (
+	AppleScriptType  ObjectType = "applescript"
 	ClipboardType    ObjectType = "clipboard"
 	KeywordType      ObjectType = "keyword"
 	OpenURLType      ObjectType = "open-url"
@@ -62,6 +63,12 @@ func (o *Object) UnmarshalYAML(node *yaml.Node) error {
 	}
 
 	switch o.Type {
+	case AppleScriptType:
+		var cfg AppleScript
+		if err := yaml.Unmarshal(rawConfig, &cfg); err != nil {
+			return err
+		}
+		o.Config = cfg
 	case ClipboardType:
 		var cfg Clipboard
 		if err := yaml.Unmarshal(rawConfig, &cfg); err != nil {
@@ -100,6 +107,7 @@ func (o *Object) UnmarshalYAML(node *yaml.Node) error {
 }
 
 var objectType = map[ObjectType]string{
+	"applescript":   "alfred.workflow.action.applescript",
 	"clipboard":     "alfred.workflow.output.clipboard",
 	"keyword":       "alfred.workflow.input.keyword",
 	"open-url":      "alfred.workflow.action.openurl",
