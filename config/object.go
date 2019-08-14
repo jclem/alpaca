@@ -139,8 +139,14 @@ var scriptType = map[string]int64{
 	"external":     8,
 }
 
+var scriptArgType = map[string]int64{
+	"query": 0,
+	"argv":  1,
+}
+
 // ScriptConfig is a runnable script in a workflow.
 type ScriptConfig struct {
+	ArgType string `yaml:"arg-type" structs"-"`
 	Content string `yaml:"content" structs:"script"`
 	Path    string `yaml:"path" structs:"scriptfile"`
 	Type    string `yaml:"type" structs:"-"`
@@ -153,6 +159,12 @@ func (s ScriptConfig) ToWorkflowConfig() map[string]interface{} {
 		m["type"] = scriptType["external"]
 	} else {
 		m["type"] = scriptType[s.Type]
+	}
+
+	if s.ArgType == "" {
+		m["scriptargtype"] = scriptArgType["argv"]
+	} else {
+		m["scriptargtype"] = scriptArgType[s.ArgType]
 	}
 
 	return m
