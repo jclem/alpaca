@@ -15,7 +15,7 @@ type Info struct {
 	Name                string                   `plist:"name,omitempty"`
 	Objects             []map[string]interface{} `plist:"objects,omitempty"`
 	Readme              string                   `plist:"readme,omitempty"`
-	UIData              map[string]UIData        `plist:"uidata,omitempty"`
+	UIData              uidata                   `plist:"uidata,omitempty"`
 	WebAddress          string                   `plist:"webaddress,omitempty"`
 	Variables           map[string]string        `plist:"variables,omitempty"`
 	VariablesDontExport []string                 `plist:"variablesdontexport,omitempty"`
@@ -73,6 +73,8 @@ func NewFromConfig(path string, c config.Config) (*Info, error) {
 		i.Objects = append(i.Objects, obj)
 	}
 
+	i.buildUIData()
+
 	return &i, nil
 }
 
@@ -94,9 +96,3 @@ type Object struct {
 
 // Config is a generic object configuration object.
 type Config map[string]interface{}
-
-// UIData represents the position of an object.
-type UIData struct {
-	XPos int64 `plist:"xpos,omitempty"`
-	YPos int64 `plist:"ypos,omitempty"`
-}
