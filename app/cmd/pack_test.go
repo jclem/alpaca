@@ -106,8 +106,7 @@ func TestPack(t *testing.T) {
 	clipboard := sortedObjs[5]
 	config = clipboard["config"].(map[string]interface{})
 	assert.Equal(t, "alfred.workflow.output.clipboard", clipboard["type"])
-	assert.Equal(t, "{query}", config["text"])
-
+	assert.Equal(t, "{query}", config["clipboardtext"])
 
 	// Test connections
 	assert.Equal(t, applescript["uid"], i.Connections[clipboard["uid"].(string)][0].To)

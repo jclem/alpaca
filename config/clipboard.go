@@ -7,7 +7,7 @@ import (
 
 // Clipboard is an object that copies to the clipboard
 type Clipboard struct {
-	Text string `yaml:"text" structs:"text"`
+	Text string `yaml:"text" structs:"clipboardtext"`
 }
 
 func (c *Clipboard) UnmarshalYAML(node *yaml.Node) error {
