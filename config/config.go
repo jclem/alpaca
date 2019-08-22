@@ -24,9 +24,48 @@ type Config struct {
 // ObjectMap is a mapping of object names to objects
 type ObjectMap map[string]Object
 
+// ThenList is a list of Then structs
+type ThenList []Then
+
+func (l *ThenList) UnmarshalYAML(node *yaml.Node) error {
+	var s string
+	if err := node.Decode(&s); err == nil {
+		*l = ThenList{Then{Object: s}}
+		return nil
+	}
+
+	type alias ThenList
+	var as alias
+	if err := node.Decode(&as); err != nil {
+		return err
+	}
+
+	*l = ThenList(as)
+
+	return nil
+}
+
 // Then is an object following another object.
 type Then struct {
 	Object string `yaml:"object"`
+}
+
+func (t *Then) UnmarshalYAML(node *yaml.Node) error {
+	var s string
+	if err := node.Decode(&s); err == nil {
+		t.Object = s
+		return nil
+	}
+
+	type alias Then
+	var as alias
+	if err := node.Decode(&as); err != nil {
+		return err
+	}
+
+	*t = Then(as)
+
+	return nil
 }
 
 // UnmarshalYAML unmarshals an object.

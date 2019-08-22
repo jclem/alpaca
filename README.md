@@ -64,8 +64,8 @@ objects:
       keyword: say
       with-space: true
       argument: required
-    then:
-      - object: say
+    then: say
+
   say:
     type: script
     config:
@@ -98,7 +98,7 @@ objects:
   - [`script`](#script)
   - [`script-filter`](#script-filter)
 - `config` A type-specific configuration object, see each type schema for details
-- `then` A list representing other objects to connect to, each item has this schema:
+- `then` A string, list of strings, or a list of objects representing other objects to connect to, each objects having this schema:
   - `object` The name of the object to connect to
 
 #### `applescript`

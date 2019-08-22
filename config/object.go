@@ -28,7 +28,7 @@ type Object struct {
 	Icon    string       `yaml:"icon" structs:"-"`
 	Type    ObjectType   `yaml:"type" structs:"-"`
 	UID     string       `yaml:"-" structs:"uid"`
-	Then    []Then       `yaml:"then" structs:"-"`
+	Then    ThenList     `yaml:"then" structs:"-"`
 	Version int64        `yaml:"version" structs:"version"`
 	Config  ObjectConfig `yaml:"config" structs:"-"`
 }
@@ -43,7 +43,7 @@ func (o *Object) UnmarshalYAML(node *yaml.Node) error {
 	var proxy struct {
 		Icon    string
 		Type    ObjectType
-		Then    []Then
+		Then    ThenList
 		Version int64
 		Config  map[string]interface{}
 	}

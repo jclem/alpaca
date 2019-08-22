@@ -34,7 +34,7 @@ objects:
       title: Keyword
       subtitle: keyword
       argument: none
-    then: [object: applescript]
+    then: applescript
 
   openurl:
     type: open-url
@@ -74,4 +74,4 @@ objects:
         immediate: true
         queue-mode: wait
         queue-delay: automatic
-    then: [object: clipboard]
+    then: [clipboard]
