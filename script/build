@@ -11,6 +11,6 @@ GOOS=linux GOARCH=amd64 go build
 tar czvf build/alpaca-$1-for-Linux-64-bit.tar.gz alpaca
 rm alpaca
 
-go build
+GOOS=darwin GOARCH=amd64 go build
 tar czvf build/alpaca-$1-for-macOS.tar.gz alpaca
 rm alpaca
