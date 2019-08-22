@@ -1,0 +1,77 @@
+name: pack_test
+version: 0.1.0
+author: Jonathan Clem <jonathan@jclem.net>
+bundle-id: com.jclem.alfred.alpaca-test.say-hello
+description: Says words
+url: https://github.com/jclem/alpaca/blob/master/app/tests/fixtures/pack_test
+icon: img/alpaca.png
+
+readme: |
+  This is information about the workflow.
+
+variables:
+  FOO: foo
+
+objects:
+  applescript:
+    type: applescript
+    config:
+      cache: true
+      script:
+        content: the-applescript
+
+  clipboard:
+    type: clipboard
+    config:
+      text: '{query}'
+    then: [object: applescript]
+
+  keyword:
+    type: keyword
+    config:
+      keyword: the-keyword
+      with-space: true
+      title: Keyword
+      subtitle: keyword
+      argument: none
+    then: [object: applescript]
+
+  openurl:
+    type: open-url
+    config:
+      url: https://example.com
+
+  script:
+    type: script
+    icon: img/alpaca.png
+    config:
+      script:
+        content: |-
+          echo "hi"
+        type: bash
+
+  script-filter:
+    type: script-filter
+    icon: img/alpaca.png
+    config:
+      argument: optional
+      argument-trim: off
+      escaping:
+        - spaces
+        - dollars
+      ignore-empty-argument: true
+      keyword: filter
+      running-subtitle: Please wait...
+      subtitle: Runs a script filter
+      title: Run script-filter
+      with-space: true
+      script:
+        arg-type: argv
+        path: scripts/script.js
+      alfred-filters-results:
+        mode: word-match
+      run-behavior:
+        immediate: true
+        queue-mode: wait
+        queue-delay: automatic
+    then: [object: clipboard]

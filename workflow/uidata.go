@@ -1,5 +1,7 @@
 package workflow
 
+import "sort"
+
 const (
 	xPadding = 20
 	yPadding = 20
@@ -22,7 +24,16 @@ func (i *Info) buildUIData() {
 	// A map of object depths to object UIDs at that depth
 	depthMap := make(map[int64][]string)
 
-	for _, obj := range i.Objects {
+	// Sort for testing stability
+	sortedObjs := make([]map[string]interface{}, len(i.Objects))
+	copy(sortedObjs, i.Objects)
+	sort.Slice(sortedObjs, func(i, j int) bool {
+		iType := sortedObjs[i]["type"].(string)
+		jType := sortedObjs[j]["type"].(string)
+		return iType < jType
+	})
+
+	for _, obj := range sortedObjs {
 		uid := obj["uid"].(string)
 		depth := findDepth(uid, i.Connections)
 		depthMap[depth] = append(depthMap[depth], uid)

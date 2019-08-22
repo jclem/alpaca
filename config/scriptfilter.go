@@ -72,6 +72,7 @@ func (s ScriptFilter) ToWorkflowConfig() map[string]interface{} {
 		m[k] = v
 	}
 
+	m["argumenttype"] = argumentType[s.Argument]
 	m["argumenttrimmode"] = argumentTrim[s.ArgumentTrim]
 	m["argumenttreatemptyqueryasnil"] = s.IgnoreEmptyArgument
 
