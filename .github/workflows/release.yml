@@ -8,7 +8,7 @@ jobs:
         with: {go-version: '1.12.7'}
       - uses: actions/checkout@v1.0.0
       - run: go test ./...
-      - run: script/build
+      - run: script/build ${{github.event.action}}
       - uses: jclem/github-release@master
         with:
           tag-name: ${{github.event.action}}
