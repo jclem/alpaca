@@ -1,5 +1,7 @@
 # <img src="alpaca.svg" width="150" /> Alpaca
 
+![](https://github.com/jclem/alpaca/workflows/.github/workflows/ci.yml/badge.svg)
+
 Alpaca is a command line utility for building Alfred workflow bundles.
 
 An alpaca project is an `alpaca.yml` file that defines the workflow, alongside any supporting files, such as scripts or images.
