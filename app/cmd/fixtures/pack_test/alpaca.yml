@@ -16,7 +16,6 @@ objects:
   applescript:
     type: applescript
     config:
-      cache: true
       script:
         content: the-applescript
 
