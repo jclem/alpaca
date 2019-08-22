@@ -62,7 +62,6 @@ objects:
     type: keyword
     config:
       keyword: say
-      with-space: true
       argument: required
     then: say
 
@@ -113,7 +112,7 @@ objects:
 #### `keyword`
 
 - `keyword` (`string`) The keyword that triggers this object
-- `with-space` (`bool`) Whether a space is required with this object
+- `with-space` (`bool`, default `true`) Whether a space is required with this object
 - `title` (`string`) The title of the object
 - `subtitle` (`string`) The subtitle of the object
 - `argument` (`string`) A string determining whether an argument is required. One of:
@@ -151,7 +150,7 @@ objects:
 - `running-subtitle` (`string`) A subtitle to display while this filter runs
 - `subtitle` (`string`) A subtitle for this object
 - `title` (`string`) A title for this object
-- `with-space` (`bool`) Whether a space is required with this object
+- `with-space` (`bool`, default `true`) Whether a space is required with this object
 - `alfred-filters-results` An object describing how Alfred filters results (it does not if this is omitted):
   - `mode` (`string`) The mode Alfred uses to filter results. One of:
     - `exact-boundary`

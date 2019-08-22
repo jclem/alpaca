@@ -1,6 +1,9 @@
 package config
 
-import "github.com/fatih/structs"
+import (
+	"github.com/fatih/structs"
+	yaml "gopkg.in/yaml.v3"
+)
 
 type keywordArgumentType string
 
@@ -9,6 +12,12 @@ var (
 	keywordArgumentOptional keywordArgumentType = "optional"
 	keywordArgumentNone     keywordArgumentType = "none"
 )
+
+var argumentType = map[keywordArgumentType]int64{
+	"required": 0,
+	"optional": 1,
+	"none":     2,
+}
 
 // Keyword is an object triggered by a keyword
 type Keyword struct {
@@ -19,10 +28,16 @@ type Keyword struct {
 	Argument  keywordArgumentType `yaml:"argument" structs:"argumenttype"`
 }
 
-var argumentType = map[keywordArgumentType]int64{
-	"required": 0,
-	"optional": 1,
-	"none":     2,
+func (k *Keyword) UnmarshalYAML(node *yaml.Node) error {
+	type alias Keyword
+	as := alias{WithSpace: true}
+	if err := node.Decode(&as); err != nil {
+		return err
+	}
+
+	*k = Keyword(as)
+
+	return nil
 }
 
 func (k Keyword) ToWorkflowConfig() map[string]interface{} {

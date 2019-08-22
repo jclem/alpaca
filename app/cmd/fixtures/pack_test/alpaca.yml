@@ -27,7 +27,6 @@ objects:
     type: keyword
     config:
       keyword: the-keyword
-      with-space: true
       title: Keyword
       subtitle: keyword
       argument: none
@@ -61,7 +60,6 @@ objects:
       running-subtitle: Please wait...
       subtitle: Runs a script filter
       title: Run script-filter
-      with-space: true
       script:
         arg-type: argv
         path: scripts/script.js

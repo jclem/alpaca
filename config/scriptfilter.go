@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/fatih/structs"
+	yaml "gopkg.in/yaml.v3"
 )
 
 var alfredMatchMode = map[string]int64{
@@ -30,6 +31,19 @@ var queueMode = map[string]int64{
 	"terminate": 2,
 }
 
+var queueDelayCustom = map[string]int64{
+	"100ms":  1,
+	"200ms":  2,
+	"300ms":  3,
+	"400ms":  4,
+	"500ms":  5,
+	"600ms":  6,
+	"700ms":  7,
+	"800ms":  8,
+	"900ms":  9,
+	"1000ms": 10,
+}
+
 // ScriptFilter is an Alfred filter that runs a script
 type ScriptFilter struct {
 	Argument            keywordArgumentType `yaml:"argument" structs:"argumenttype"`
@@ -52,17 +66,16 @@ type ScriptFilter struct {
 	} `yaml:"run-behavior" structs:"-"`
 }
 
-var queueDelayCustom = map[string]int64{
-	"100ms":  1,
-	"200ms":  2,
-	"300ms":  3,
-	"400ms":  4,
-	"500ms":  5,
-	"600ms":  6,
-	"700ms":  7,
-	"800ms":  8,
-	"900ms":  9,
-	"1000ms": 10,
+func (s *ScriptFilter) UnmarshalYAML(node *yaml.Node) error {
+	type alias ScriptFilter
+	as := alias{WithSpace: true}
+	if err := node.Decode(&as); err != nil {
+		return err
+	}
+
+	*s = ScriptFilter(as)
+
+	return nil
 }
 
 func (s ScriptFilter) ToWorkflowConfig() map[string]interface{} {
