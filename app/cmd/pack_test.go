@@ -60,9 +60,6 @@ func TestPack(t *testing.T) {
 	assert.Equal(t, "the-applescript", config["applescript"].(string))
 	assert.Equal(t, "alfred.workflow.action.applescript", applescript["type"])
 
-	// a, _ := json.Marshal(sortedObjs)
-	// fmt.Println(string(a))
-	// t.Error("no")
 	openurl := sortedObjs[1]
 	config = openurl["config"].(map[string]interface{})
 	assert.Equal(t, "alfred.workflow.action.openurl", openurl["type"])
