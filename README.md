@@ -61,9 +61,9 @@ objects:
 - `url` A homepage URL for the workflow
 - `icon` A project-relative path to an icon to use for the worflow
 - `variables` A map of variable names and their default values
-- [`object`](#object-schema) An map of objects in the Alfred workflow. Each key is an object name.
+- [`object`](#object-config-schema) An map of objects in the Alfred workflow. Each key is an object name.
 
-### Object Schema
+### Object `config` Schema
 
 - `icon` A project-relative path to an icon for the object
 - `type` The type of object this is. Currently partial support exists for:
