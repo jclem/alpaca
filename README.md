@@ -108,7 +108,7 @@ objects:
 
 #### `clipboard`
 
-- `text` (`string`) The text to copy to the clipboard—use `"{query}"` for the exact query
+- `text` (`string`, default `"{query}"`) The text to copy to the clipboard—use `"{query}"` for the exact query
 
 #### `keyword`
 

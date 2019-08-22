@@ -21,8 +21,6 @@ objects:
 
   clipboard:
     type: clipboard
-    config:
-      text: '{query}'
     then: [object: applescript]
 
   keyword:
