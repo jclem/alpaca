@@ -8,6 +8,28 @@ An alpaca project is an `alpaca.yml` file that defines the workflow, alongside a
 
 **Note:** Alpaca is still in the proof-of-concept phase. Huge portions of Alfred functionality are unimplemented.
 
+<details>
+<summary><strong>Contents</strong></summary>
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [`alpaca pack`](#alpaca-pack-dir)
+- [Schema](#schema)
+  - [Example](#example)
+  - [Root Schema](#root-schema)
+  - [Object Schema](#object-schema)
+    - [`applescript`](#applescript)
+    - [`clipboard`](#clipboard)
+    - [`keyword`](#keyword)
+    - [`open-url`](#open-url)
+    - [`script`](#script)
+    - [`script-filter`](#script-filter)
+  - [Script Schema](#script-schema)
+    - [Executable Script](#executable-script)
+    - [Inline Script](#inline-script)
+
+</details>
+
 ## Installation
 
 ```shell
