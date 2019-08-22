@@ -32,6 +32,8 @@ An alpaca project is an `alpaca.yml` file that defines the workflow, alongside a
 
 ## Installation
 
+[Download the latest release](https://github.com/jclem/alpaca/releases/latest), or:
+
 ```shell
 $ go get github.com/jclem/alpaca
 ```
