@@ -16,8 +16,7 @@ objects:
   applescript:
     type: applescript
     config:
-      script:
-        content: the-applescript
+      content: the-applescript
 
   clipboard:
     type: clipboard

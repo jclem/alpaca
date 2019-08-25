@@ -103,7 +103,7 @@ objects:
 #### `applescript`
 
 - `cache` (`bool`, default `true`) Whether to cache the compiled AppleScript
-- [`script`](#script-schema) A script configuration object, but only `content` is respected
+- `content` (`string`) The content of the AppleScript
 
 #### `clipboard`
 

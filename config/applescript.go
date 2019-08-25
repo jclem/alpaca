@@ -7,8 +7,9 @@ import (
 
 // AppleScript is an Alfred action that runs NSAppleScript
 type AppleScript struct {
-	Cache  bool         `yaml:"cache" structs:"cachescript"`
-	Script ScriptConfig `yaml:"script" structs:"-"`
+	Cache   bool         `yaml:"cache" structs:"cachescript"`
+	Content string       `yaml:"content" structs:"-"`
+	Script  ScriptConfig `yaml:"script" structs:"-"`
 }
 
 func (a *AppleScript) UnmarshalYAML(node *yaml.Node) error {
@@ -26,5 +27,6 @@ func (a *AppleScript) UnmarshalYAML(node *yaml.Node) error {
 func (a AppleScript) ToWorkflowConfig() map[string]interface{} {
 	m := structs.Map(a)
 	m["applescript"] = a.Script.Content
+	m["applescript"] = a.Content
 	return m
 }
